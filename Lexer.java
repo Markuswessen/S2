@@ -11,38 +11,36 @@ public class Lexer {
     public int currentToken;
     
     private static String readInput(InputStream f) throws java.io.IOException {
-		Reader stdin = new InputStreamReader(f);
-		StringBuilder buf = new StringBuilder();
-		char input[] = new char[1024];
-        System.out.println(input);
-		int read = 0;
-		while ((read = stdin.read(input)) != -1) {
-            String chunk = new String(input, 0, read);
-            // Check for sentinel value "EOF" to stop reading
-            if (chunk.contains("EOF")) {
-                int endIndex = chunk.indexOf("EOF");
-                buf.append(chunk, 0, endIndex);
-                break;
-            }
-            buf.append(chunk);
+        Reader stdin = new InputStreamReader(f);
+        StringBuilder buf = new StringBuilder();
+        char[] input = new char[1024];
+        int read;
+        while ((read = stdin.read(input)) != -1) {
+            buf.append(input, 0, read);
         }
-		return buf.toString();
-	}
+        
+        String result = buf.toString().replaceAll("\r\n", "\n"); // Standardisera radbrytningar
+        //System.out.println("### Raw Input: ###\n" + result);
+        
+        return result;
+    }
+
 
     public Lexer(InputStream in) throws java.io.IOException {
 
         String input = Lexer.readInput(in);
         
-        String regex = "FORW|BACK|LEFT|RIGHT|DOWN|UP|COLOR|REP|#[0-9A-Fa-f]{6}|\\d+|\"|\\.|[^A-Za-z0-9#]|\\s+";
+        String regex = "%.*|FORW|BACK|LEFT|RIGHT|DOWN|UP|COLOR|REP|#[0-9A-Fa-f]{6}|\\d+|\"|\\.|[^A-Za-z0-9#]|\\s+";
         Pattern tokenPattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher m = tokenPattern.matcher(input);
         int inputPos = 0;
         tokens = new ArrayList<>();
         currentToken = 0;
         while (m.find()) {
-            if (m.start() != inputPos) {
-				tokens.add(new Token(TokenType.Error));
-			}
+
+            if (m.group().matches("\\s+") || m.group().matches("%.*")) {
+                continue; // Hoppa över whitespace och kommentarer
+            }
             
             if (m.group().matches("(?i)FORW")) {
                 tokens.add(new Token(TokenType.Forw));
@@ -71,12 +69,19 @@ public class Lexer {
             }
             inputPos = m.end();
         }
+
         if (inputPos != input.length()) {
-			tokens.add(new Token(TokenType.Error));
-		}
+            if (input.substring(inputPos).matches("\\s*")) {
+                //System.out.println("Ignorerar tomma radbrytningar på slutet.");
+            } else {
+                System.out.println("Missad input: '" + input.substring(inputPos) + "'");
+                tokens.add(new Token(TokenType.Error));
+            }
+        }
+
         for(int i = 0; i < tokens.size(); i++){
-            System.out.println(tokens.get(i).getType());
-            System.out.println(tokens.get(i).getData());
+            //System.out.println(tokens.get(i).getType());
+            //System.out.println(tokens.get(i).getData());
         }
         
     }

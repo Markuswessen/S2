@@ -1,8 +1,8 @@
 // Författare: Per Austrin
 
-// De olika token-typer vi har i grammatiken
+// De olika token-typerna vi har i grammatiken
 enum TokenType {
-    Forw, Back, Left, Right, Down, Up, Color, Rep, Period, Quote, Decimal, Hex, Error
+    Root, Forw, Back, Left, Right, Down, Up, Color, Rep, Period, Quote, Decimal, Hex, Error
 }
 
 // Klass för att representera en token
