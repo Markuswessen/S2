@@ -1,3 +1,7 @@
-down. 
-forw 1. left 90.
-EOF
+% Det här är en kommentar
+% Nu ritar vi en kvadrat
+DOWN.
+FORW 1. LEFT 90.
+FORW 1. LEFT 90.
+FORW 1. LEFT 90.
+FORW 1. LEFT 90.

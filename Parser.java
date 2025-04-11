@@ -18,7 +18,7 @@ public class Parser {
 
     private ParseTree program() throws SyntaxError {
         Token t = lexer.peekToken();
-
+        
         ParseTree parseTree = new ParseTree(new Token(TokenType.Root, "Program"));
 
         while (lexer.hasMoreTokens()) {

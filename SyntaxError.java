@@ -3,5 +3,7 @@
 // vilken rad/position felet uppstod
 // Författare: Per Austrin
 public class SyntaxError extends Exception {
-    
+   // public SyntaxError (int line){
+     //   super("SyntaxError på rad" + line);
+    //}
 }
