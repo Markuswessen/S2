@@ -36,9 +36,9 @@ public class Lexer {
     public Lexer(String input) throws java.io.IOException {
 
         String regex = "%.*|FORW|BACK|LEFT|RIGHT|DOWN|UP|COLOR|REP|#[0-9A-Fa-f]{6}|\\d+|\"|\\.|[^A-Za-z0-9#]|\\s+";
-        System.out.println("Hejsan");
+       // System.out.println("Hejsan");
         Pattern tokenPattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-        System.out.println("Hejsan2");
+        //System.out.println("Hejsan2");
 
         Matcher m = tokenPattern.matcher(input);
         int inputPos = 0;
@@ -69,7 +69,7 @@ public class Lexer {
             } else if (m.group().matches("(?i)REP")) {
                 tokens.add(new Token(TokenType.Rep));
             } else if (m.group().matches("#[0-9A-Fa-f]{6}")) {
-                tokens.add(new Token(TokenType.Hex));
+                tokens.add(new Token(TokenType.Hex, m.group()));
             } else if (Character.isDigit(m.group().charAt(0))) {
                 tokens.add(new Token(TokenType.Decimal, Integer.parseInt(m.group())));
             } else if (m.group().matches("\"")) {
@@ -82,7 +82,7 @@ public class Lexer {
 
         if (inputPos != input.length()) {
             if (input.substring(inputPos).matches("\\s*")) {
-                System.out.println("Ignorerar tomma radbrytningar på slutet.");
+                //System.out.println("Ignorerar tomma radbrytningar på slutet.");
             } else {
                 System.out.println("Missad input: '" + input.substring(inputPos) + "'");
                 tokens.add(new Token(TokenType.Error));
@@ -90,7 +90,7 @@ public class Lexer {
         }
 
         for (int i = 0; i < tokens.size(); i++) {
-            System.out.println(tokens.get(i).getType());
+            //System.out.println(tokens.get(i).getType());
             // System.out.println(tokens.get(i).getData());
         }
 

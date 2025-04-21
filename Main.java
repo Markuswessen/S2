@@ -93,22 +93,22 @@ public class Main {
     }
 
     public static void main(String[] args) throws java.io.IOException, SyntaxError {
-        System.out.println("ja");
+        //System.out.println("ja");
         Scanner scanner = new Scanner(System.in);
         StringBuilder inputBuilder = new StringBuilder();
         while (scanner.hasNextLine()) {
             inputBuilder.append(scanner.nextLine()).append("\n");
-            System.out.println("row");
+            //System.out.println("row");
         }
         String result = inputBuilder.toString().replaceAll("\r\n", "\n"); // Standardisera radbrytningar;
         scanner.close();
         
         Lexer lexer = new Lexer(result);
-        System.out.println("ja2");
+        //System.out.println("ja2");
         Parser parser = new Parser(lexer);
-        System.out.println("ja3");
+        //System.out.println("ja3");
         ParseTree Tree = parser.parse();
-        System.out.println("ja4");
+        //System.out.println("ja4");
         // result.printTree();
         Leona leona = new Leona(0, 0, 0, false);
         traverseParseTree(Tree, leona, "#0000FF");
