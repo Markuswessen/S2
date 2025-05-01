@@ -21,7 +21,7 @@ public class Parser {
 
     private ParseTree program() throws SyntaxError {
         Token t = lexer.peekToken();
-        
+
         ParseTree parseTree = new ParseTree(new Token(TokenType.Root, "Program"));
 
         while (lexer.hasMoreTokens()) {
@@ -50,7 +50,7 @@ public class Parser {
     // instruktionen.
     private ParseTree instruction() throws SyntaxError {
         Token t = lexer.peekToken();
-        System.out.println(t.getType() + " + " + t.getData());
+        System.out.println(t.getType() + " + " + t.getData() + " im here up here");
         if (t.getType() == TokenType.Forw || t.getType() == TokenType.Back) {
             return movement();
         } else if (t.getType() == TokenType.Left || t.getType() == TokenType.Right) {
@@ -62,6 +62,7 @@ public class Parser {
         } else if (t.getType() == TokenType.Rep) {
             return repeat();
         } else {
+            System.out.println(t.getType() + " im here down here");
             throw new SyntaxError();
         }
     }
@@ -129,7 +130,7 @@ public class Parser {
         System.out.println(period.getType() + " param2?");
         if (period.getType() != TokenType.Period)
             throw new SyntaxError();
-
+        System.out.println("Im this now:" + color.getType());
         ParseTree parseTree = new ParseTree(color);
         parseTree.addChild(new ParseTree(hex));
         parseTree.addChild(new ParseTree(period));
@@ -147,25 +148,25 @@ public class Parser {
         System.out.println(decimal.getType() + " " + decimal.getData());
         if (decimal.getType() != TokenType.Decimal)
             throw new SyntaxError();
-        if(lexer.peekToken().getType() == TokenType.Quote) {
-            
+        if (lexer.peekToken().getType() == TokenType.Quote) {
+
             Token firstQuote = lexer.nextToken();
             parseTree.addChild(new ParseTree(firstQuote));
+            while (lexer.peekToken().getType() != TokenType.Quote) {
 
-            while(lexer.peekToken().getType() != TokenType.Quote){
-                Token instruction = lexer.nextToken();
-                System.out.println(instruction.getType() + " instruction?");
                 ParseTree instructionTree = instruction();
                 parseTree.addChild(instructionTree);
+
             }
 
             Token secondQuote = lexer.nextToken();
-            System.out.println(secondQuote.getType() + "?");
+            System.out.println(secondQuote.getType() + "?????");
             if (secondQuote.getType() != TokenType.Quote) {
                 throw new SyntaxError();
             }
-        } else {
 
+        } else {
+            System.out.println("Im in the else");
             ParseTree instructionTree = instruction();
             parseTree.addChild(instructionTree);
         }
