@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Parser {
     private Lexer lexer;
 
@@ -137,33 +140,35 @@ public class Parser {
     private ParseTree repeat() throws SyntaxError {
         Token rep = lexer.nextToken();
         Token decimal = lexer.nextToken();
-        System.out.println(decimal.getType() + " number2");
-        if (decimal.getType() != TokenType.Decimal)
-            throw new SyntaxError();
-
-        Token quote = lexer.nextToken();
-        if (quote.getType() != TokenType.Quote)
-            throw new SyntaxError();
 
         ParseTree parseTree = new ParseTree(rep);
         parseTree.addChild(new ParseTree(decimal));
-        parseTree.addChild(new ParseTree(quote));
 
-        int currentPosition = lexer.currentToken;
-        System.out.println(quote.getType() + "  quote?!!");
-        for (int i = 0; i < (Integer) decimal.getData(); i++) {
-            parseTree.addChild(program());
-            if (i != (Integer) decimal.getData() - 1)
-                lexer.currentToken = currentPosition;
-        }
-
-        Token param4 = lexer.nextToken();
-        System.out.println(param4.getType() + "?");
-        if (param4.getType() != TokenType.Quote) {
+        System.out.println(decimal.getType() + " " + decimal.getData());
+        if (decimal.getType() != TokenType.Decimal)
             throw new SyntaxError();
-        }
+        if(lexer.peekToken().getType() == TokenType.Quote) {
+            
+            Token firstQuote = lexer.nextToken();
+            parseTree.addChild(new ParseTree(firstQuote));
 
-        parseTree.addChild(new ParseTree(quote));
+            while(lexer.peekToken().getType() != TokenType.Quote){
+                Token instruction = lexer.nextToken();
+                System.out.println(instruction.getType() + " instruction?");
+                ParseTree instructionTree = instruction();
+                parseTree.addChild(instructionTree);
+            }
+
+            Token secondQuote = lexer.nextToken();
+            System.out.println(secondQuote.getType() + "?");
+            if (secondQuote.getType() != TokenType.Quote) {
+                throw new SyntaxError();
+            }
+        } else {
+
+            ParseTree instructionTree = instruction();
+            parseTree.addChild(instructionTree);
+        }
 
         return parseTree;
     }
