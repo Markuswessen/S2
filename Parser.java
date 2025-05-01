@@ -50,7 +50,7 @@ public class Parser {
     // instruktionen.
     private ParseTree instruction() throws SyntaxError {
         Token t = lexer.peekToken();
-        System.out.println(t.getType() + " + " + t.getData() + " im here up here");
+        System.out.println(t.getType() + " + " + t.getData() + " im up here");
         if (t.getType() == TokenType.Forw || t.getType() == TokenType.Back) {
             return movement();
         } else if (t.getType() == TokenType.Left || t.getType() == TokenType.Right) {
@@ -62,7 +62,7 @@ public class Parser {
         } else if (t.getType() == TokenType.Rep) {
             return repeat();
         } else {
-            System.out.println(t.getType() + " im here down here");
+            System.out.println(t.getType() + " im down here");
             throw new SyntaxError();
         }
     }
