@@ -10,7 +10,8 @@ import java.util.regex.Matcher;
 public class Lexer {
     private List<Token> tokens;
     public int currentToken;
-
+    private int lastrow = 1;
+    private int row = 1;
     /*
      * private static String readInput(InputStream f) throws java.io.IOException {
      * // Reader stdin = new InputStreamReader(f);
@@ -33,7 +34,7 @@ public class Lexer {
      * }
      */
 
-    public Lexer(String input) throws java.io.IOException {
+    public Lexer(String input) throws java.io.IOException, SyntaxError {
 
         String regex = "%.*|FORW|BACK|LEFT|RIGHT|DOWN|UP|COLOR|REP|#[0-9A-Fa-f]{6}|\\d+|\"|\\.|[^A-Za-z0-9#]|\\s+";
        // System.out.println("Hejsan");
@@ -42,42 +43,45 @@ public class Lexer {
 
         Matcher m = tokenPattern.matcher(input);
         int inputPos = 0;
-        int row = 1;
         tokens = new ArrayList<>();
         currentToken = 0;
 
         while (m.find()) {
-
+           
+            int lines = m.group().length() - m.group().replace("\n", "").length();
+            row += lines;
+        
+            // ✔️ Hoppa över whitespace och kommentarer, men EFTER att ha uppdaterat rad
             if (m.group().matches("\\s+") || m.group().matches("%.*")) {
-                row++;
-                continue; // Hoppa över whitespace och kommentarer
+                continue;
             }
 
             if (m.group().matches("(?i)FORW")) {
-                tokens.add(new Token(TokenType.Forw));
+                tokens.add(new Token(TokenType.Forw, null, row));
             } else if (m.group().matches("(?i)BACK")) {
-                tokens.add(new Token(TokenType.Back));
+                tokens.add(new Token(TokenType.Back, null, row));
             } else if (m.group().matches("(?i)LEFT")) {
-                tokens.add(new Token(TokenType.Left));
+                tokens.add(new Token(TokenType.Left, null, row));
             } else if (m.group().matches("(?i)RIGHT")) {
-                tokens.add(new Token(TokenType.Right));
+                tokens.add(new Token(TokenType.Right, null, row));
             } else if (m.group().matches("(?i)DOWN")) {
-                tokens.add(new Token(TokenType.Down));
+                tokens.add(new Token(TokenType.Down, null, row));
             } else if (m.group().matches("(?i)UP")) {
-                tokens.add(new Token(TokenType.Up));
+                tokens.add(new Token(TokenType.Up, null, row));
             } else if (m.group().matches("(?i)COLOR")) {
-                tokens.add(new Token(TokenType.Color));
+                tokens.add(new Token(TokenType.Color, null, row));
             } else if (m.group().matches("(?i)REP")) {
-                tokens.add(new Token(TokenType.Rep));
+                tokens.add(new Token(TokenType.Rep, null, row));
             } else if (m.group().matches("#[0-9A-Fa-f]{6}")) {
-                tokens.add(new Token(TokenType.Hex, m.group()));
+                tokens.add(new Token(TokenType.Hex, m.group(), row));
             } else if (Character.isDigit(m.group().charAt(0))) {
-                tokens.add(new Token(TokenType.Decimal, Integer.parseInt(m.group())));
+                tokens.add(new Token(TokenType.Decimal, Integer.parseInt(m.group()), row));
             } else if (m.group().matches("\"")) {
-                tokens.add(new Token(TokenType.Quote));
+                tokens.add(new Token(TokenType.Quote, null, row));
             } else if (m.group().matches("\\.")) {
-                tokens.add(new Token(TokenType.Period));
+                tokens.add(new Token(TokenType.Period, null, row));
             }
+            lastrow = row;
             inputPos = m.end();
         }
 
@@ -85,8 +89,8 @@ public class Lexer {
             if (input.substring(inputPos).matches("\\s*")) {
                 //System.out.println("Ignorerar tomma radbrytningar på slutet.");
             } else {
-                System.out.println("Missad input: '" + input.substring(inputPos) + "'");
-                tokens.add(new Token(TokenType.Error));
+                //System.out.println("Missad input: '" + input.substring(inputPos) + "'");
+                tokens.add(new Token(TokenType.Error, null, row));
             }
         }
 
@@ -98,19 +102,19 @@ public class Lexer {
     }
 
     // Kika på nästa token i indata, utan att gå vidare
-    public Token peekToken(int row) throws SyntaxError {
+    public Token peekToken() throws SyntaxError {
         // Slut på indataströmmen
         if (!hasMoreTokens()) {
-            System.out.println("hej");
-            throw new SyntaxError(row);
+            //System.out.println("hej");
+            throw new SyntaxError(lastrow);
         }
 
         return tokens.get(currentToken);
     }
 
     // Hämta nästa token i indata och gå framåt i indata
-    public Token nextToken(int row) throws SyntaxError {
-        Token res = peekToken(row);
+    public Token nextToken() throws SyntaxError {
+        Token res = peekToken();
         currentToken++;
         return res;
     }
