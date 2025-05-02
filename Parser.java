@@ -50,7 +50,7 @@ public class Parser {
     // instruktionen.
     private ParseTree instruction() throws SyntaxError {
         Token t = lexer.peekToken();
-        System.out.println(t.getType() + " + " + t.getData() + " im here up here");
+        System.out.println(t.getType() + " + " + t.getData() + " im up here");
         if (t.getType() == TokenType.Forw || t.getType() == TokenType.Back) {
             return movement();
         } else if (t.getType() == TokenType.Left || t.getType() == TokenType.Right) {
@@ -62,7 +62,7 @@ public class Parser {
         } else if (t.getType() == TokenType.Rep) {
             return repeat();
         } else {
-            System.out.println(t.getType() + " im here down here");
+            System.out.println(t.getType() + " im down here");
             throw new SyntaxError();
         }
     }
@@ -139,6 +139,7 @@ public class Parser {
     }
 
     private ParseTree repeat() throws SyntaxError {
+        ArrayList<Token> intructions = new ArrayList<Token>();
         Token rep = lexer.nextToken();
         Token decimal = lexer.nextToken();
 
@@ -152,13 +153,21 @@ public class Parser {
 
             Token firstQuote = lexer.nextToken();
             parseTree.addChild(new ParseTree(firstQuote));
+            Token intruction = lexer.nextToken();
             while (lexer.peekToken().getType() != TokenType.Quote) {
-
-                ParseTree instructionTree = instruction();
-                parseTree.addChild(instructionTree);
-
+                intructions.add(intruction);
+                intruction = lexer.nextToken();
             }
 
+            for (int i = 0; i < (int) decimal.getData(); i++) {
+                int j = 0;
+                while (j < intructions.size()) {
+                    Token RepeatTokens = intructions.get(j);
+                    ParseTree instructionTree = instruction();
+                    parseTree.addChild(instructionTree);
+                }
+
+            }
             Token secondQuote = lexer.nextToken();
             System.out.println(secondQuote.getType() + "?????");
             if (secondQuote.getType() != TokenType.Quote) {
