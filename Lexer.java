@@ -42,13 +42,14 @@ public class Lexer {
 
         Matcher m = tokenPattern.matcher(input);
         int inputPos = 0;
-
+        int row = 1;
         tokens = new ArrayList<>();
         currentToken = 0;
 
         while (m.find()) {
 
             if (m.group().matches("\\s+") || m.group().matches("%.*")) {
+                row++;
                 continue; // Hoppa över whitespace och kommentarer
             }
 
@@ -97,19 +98,19 @@ public class Lexer {
     }
 
     // Kika på nästa token i indata, utan att gå vidare
-    public Token peekToken() throws SyntaxError {
+    public Token peekToken(int row) throws SyntaxError {
         // Slut på indataströmmen
         if (!hasMoreTokens()) {
             System.out.println("hej");
-            throw new SyntaxError();
+            throw new SyntaxError(row);
         }
 
         return tokens.get(currentToken);
     }
 
     // Hämta nästa token i indata och gå framåt i indata
-    public Token nextToken() throws SyntaxError {
-        Token res = peekToken();
+    public Token nextToken(int row) throws SyntaxError {
+        Token res = peekToken(row);
         currentToken++;
         return res;
     }

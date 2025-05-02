@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    public static void traverseParseTree(ParseTree node, Leona leona, String color) {
+    public static void traverseParseTree(ParseTree node, Leona leona) {
         if (node == null)
             return;
 
@@ -36,7 +36,7 @@ public class Main {
                 // System.out.println("x: " + leona.getX() + " newX: " + newX);
                 // System.out.println("y: " + leona.getY() + " newY: " + newY);
                 if (leona.isPenDown()) {
-                    System.out.printf("%s %.4f %.4f %.4f %.4f%n", color, leona.getX(), leona.getY(), newX, newY);
+                    System.out.printf("%s %.4f %.4f %.4f %.4f%n", leona.getColor(), leona.getX(), leona.getY(), newX, newY);
                 }
 
                 leona.setX(newX);
@@ -78,7 +78,7 @@ public class Main {
                             "Error: Expected Hex token, got " + colorToken.getType() + " token: " + token.getType());
                     return;
                 }
-                color = (String) colorToken.getData();
+                leona.setColor((String) colorToken.getData());
                 break;
 
             default:
@@ -86,7 +86,7 @@ public class Main {
         }
         // Fortsätt traversera barnnoder
         for (ParseTree child : children) {
-            traverseParseTree(child, leona, color);
+            traverseParseTree(child, leona);
             // System.out.println("node: " + node.getToken().getType() + " " +
             // node.getToken().getData());
         }
@@ -110,8 +110,8 @@ public class Main {
         ParseTree Tree = parser.parse();
         //System.out.println("ja4");
         // result.printTree();
-        Leona leona = new Leona(0, 0, 0, false);
-        traverseParseTree(Tree, leona, "#0000FF");
+        Leona leona = new Leona(0, 0, 0, false, "#0000FF");
+        traverseParseTree(Tree, leona);
         // System.out.println(result.getChildren().get(0).getChildren().get(0));
         // Parsning klar, gör vad vi nu vill göra med syntaxträdet
         /*
