@@ -12,17 +12,15 @@ enum TokenType {
 class Token {
 	public TokenType type;
 	private Object data;
-	
-	public Token(TokenType type) {
-		this.type = type;
-		this.data = null;
-	}
+	private int row;
 
-	public Token(TokenType type, Object data) {
+	public Token(TokenType type, Object data, int row) {
 		this.type = type;
 		this.data = data;
+		this.row = row;
 	}
 
+	public int getRow() { return row; }
 	public TokenType getType() { return type; }
 	public Object getData() { return data; }
 
