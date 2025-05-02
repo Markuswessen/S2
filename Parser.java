@@ -165,6 +165,7 @@ public class Parser {
                     Token RepeatTokens = intructions.get(j);
                     ParseTree instructionTree = instruction();
                     parseTree.addChild(instructionTree);
+                    j++;
                 }
 
             }
