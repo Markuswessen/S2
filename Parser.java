@@ -35,7 +35,7 @@ public class Parser {
                 parseTree.addChild(repeat());
             } else {
                 // System.out.println(t.getType());
-                // System.out.println("what");
+                //   System.out.println("what");
                 throw new SyntaxError(t.getRow());
             }
         }
@@ -108,10 +108,14 @@ public class Parser {
     private ParseTree pen() throws SyntaxError {
         Token param = lexer.nextToken();
 
+       
         Token period = lexer.nextToken();
-        if (period.getType() != TokenType.Period)
+        if (!lexer.hasMoreTokens()) 
+            throw new SyntaxError(param.getRow());
+        
+        if (period.getType() != TokenType.Period){
             throw new SyntaxError(period.getRow());
-
+        }
         ParseTree parseTree = new ParseTree(param);
         parseTree.addChild(new ParseTree(period));
 
@@ -121,7 +125,8 @@ public class Parser {
     private ParseTree color() throws SyntaxError {
         Token color = lexer.nextToken(); // ät upp t
         // System.out.println(color.getType() + " color?");
-
+        if (!lexer.hasMoreTokens()) 
+                throw new SyntaxError(color.getRow());
         Token hex = lexer.nextToken();
         // System.out.println(hex.getType() + " + " + hex.getData() + " hex?");
 

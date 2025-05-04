@@ -12,6 +12,7 @@ public class Lexer {
     public int currentToken;
     private int lastrow = 1;
     private int row = 1;
+    private int lastCodeRow = 1;
     /*
      * private static String readInput(InputStream f) throws java.io.IOException {
      * // Reader stdin = new InputStreamReader(f);
@@ -46,10 +47,10 @@ public class Lexer {
         + "|(?i)COLOR(?=[\\s.])"
         + "|(?i)REP(?=[\\s.])"
         + "|#[0-9A-Fa-f]{6}(?=[\\s.])"
-        + "|\\d+"
+        + "|\\d+(?=\\s|\\.|\"|$)"
         + "|\""
         + "|\\."
-        + "|[^A-Za-z0-9#]"
+        + "|[^A-Za-z0-9#](?=[\\s.])"
         + "|\\s+"
         + "|\\S+";
         
@@ -59,7 +60,7 @@ public class Lexer {
         // System.out.println("Hejsan2");
 
         Matcher m = tokenPattern.matcher(input);
-        //System.out.println(m);
+       // System.out.println(m);
         int inputPos = 0;
         tokens = new ArrayList<>();
         currentToken = 0;
@@ -75,22 +76,31 @@ public class Lexer {
 
             if (m.group().matches("(?i)FORW")) {
                 tokens.add(new Token(TokenType.Forw, null, row));
+                lastCodeRow = row;
             } else if (m.group().matches("(?i)BACK")) {
                 tokens.add(new Token(TokenType.Back, null, row));
+                lastCodeRow = row;
             } else if (m.group().matches("(?i)LEFT")) {
                 tokens.add(new Token(TokenType.Left, null, row));
+                lastCodeRow = row;
             } else if (m.group().matches("(?i)RIGHT")) {
                 tokens.add(new Token(TokenType.Right, null, row));
+                lastCodeRow = row;
             } else if (m.group().matches("(?i)DOWN")) {
                 tokens.add(new Token(TokenType.Down, null, row));
+                lastCodeRow = row;
             } else if (m.group().matches("(?i)UP")) {
                 tokens.add(new Token(TokenType.Up, null, row));
+                lastCodeRow = row;
             } else if (m.group().matches("(?i)COLOR")) {
                 tokens.add(new Token(TokenType.Color, null, row));
+                lastCodeRow = row;
             } else if (m.group().matches("(?i)REP")) {
                 tokens.add(new Token(TokenType.Rep, null, row));
+                lastCodeRow = row;
             } else if (m.group().matches("#[0-9A-Fa-f]{6}")) {
                 tokens.add(new Token(TokenType.Hex, m.group(), row));
+                lastCodeRow = row;
             } else if (Character.isDigit(m.group().charAt(0))) {
                 tokens.add(new Token(TokenType.Decimal, Integer.parseInt(m.group()), row));
             } else if (m.group().matches("\"")) {
@@ -125,7 +135,7 @@ public class Lexer {
         // Slut på indataströmmen
         if (!hasMoreTokens()) {
             // System.out.println("hej");
-            throw new SyntaxError(lastrow);
+            throw new SyntaxError(lastCodeRow);
         }
 
         return tokens.get(currentToken);
