@@ -23,7 +23,7 @@ public class Parser {
         Token t = lexer.peekToken();
 
         ParseTree parseTree = new ParseTree(new Token(TokenType.Root, "Program", 1));
-
+        // System.out.println(t.getType() + " " + t.getData());
         while (lexer.hasMoreTokens()) {
             if (t.getType() == TokenType.Forw || t.getType() == TokenType.Back || t.getType() == TokenType.Left
                     || t.getType() == TokenType.Right || t.getType() == TokenType.Down || t.getType() == TokenType.Up
@@ -32,10 +32,11 @@ public class Parser {
                 parseTree.addChild(instruction());
             } else if (t.getType() == TokenType.Rep) {
                 // return parsetree.addbranch(repeat());
+                // System.out.println("repeat?");
                 parseTree.addChild(repeat());
             } else {
                 // System.out.println(t.getType());
-                //   System.out.println("what");
+                // System.out.println("what");
                 throw new SyntaxError(t.getRow());
             }
         }
@@ -108,12 +109,11 @@ public class Parser {
     private ParseTree pen() throws SyntaxError {
         Token param = lexer.nextToken();
 
-       
         Token period = lexer.nextToken();
-        if (!lexer.hasMoreTokens()) 
+        if (!lexer.hasMoreTokens())
             throw new SyntaxError(param.getRow());
-        
-        if (period.getType() != TokenType.Period){
+
+        if (period.getType() != TokenType.Period) {
             throw new SyntaxError(period.getRow());
         }
         ParseTree parseTree = new ParseTree(param);
@@ -125,8 +125,8 @@ public class Parser {
     private ParseTree color() throws SyntaxError {
         Token color = lexer.nextToken(); // ät upp t
         // System.out.println(color.getType() + " color?");
-        if (!lexer.hasMoreTokens()) 
-                throw new SyntaxError(color.getRow());
+        if (!lexer.hasMoreTokens())
+            throw new SyntaxError(color.getRow());
         Token hex = lexer.nextToken();
         // System.out.println(hex.getType() + " + " + hex.getData() + " hex?");
 
@@ -146,12 +146,14 @@ public class Parser {
 
     private ParseTree repeat() throws SyntaxError {
         Token rep = lexer.nextToken();
+        // System.out.println(rep.getType() + " " + rep.getData());
+
         Token decimal = lexer.nextToken();
 
         ParseTree parseTree = new ParseTree(rep);
         parseTree.addChild(new ParseTree(decimal));
 
-        // System.out.println(decimal.getType() + " " + decimal.getData());
+        //System.out.println(decimal.getType() + " " + decimal.getData());
         if (decimal.getType() != TokenType.Decimal)
             throw new SyntaxError(decimal.getRow());
         if (lexer.peekToken().getType() == TokenType.Quote) {

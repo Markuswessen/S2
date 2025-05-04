@@ -38,16 +38,16 @@ public class Lexer {
     public Lexer(String input) throws java.io.IOException, SyntaxError {
 
         String regex = "%.*" 
-        + "|(?i)FORW(?=[\\s.])"
-        + "|(?i)BACK(?=[\\s.])"
-        + "|(?i)LEFT(?=[\\s.])" 
-        + "|(?i)RIGHT(?=[\\s.])"
-        + "|(?i)DOWN(?=[\\s.])" 
-        + "|(?i)UP(?=[\\s.])" 
-        + "|(?i)COLOR(?=[\\s.])"
-        + "|(?i)REP(?=[\\s.])"
+        + "|(?i)FORW(?=[\\s.%])"
+        + "|(?i)BACK(?=[\\s.%])"
+        + "|(?i)LEFT(?=[\\s.%])" 
+        + "|(?i)RIGHT(?=[\\s.%])"
+        + "|(?i)DOWN(?=[\\s.%])" 
+        + "|(?i)UP(?=[\\s.%])" 
+        + "|(?i)COLOR(?=[\\s.%])"
+        + "|(?i)REP(?=[\\s.%])"
         + "|#[0-9A-Fa-f]{6}(?=[\\s.])"
-        + "|\\d+(?=\\s|\\.|\"|$)"
+        + "|\\d+(?=[\\s.%]|$)"
         + "|\""
         + "|\\."
         + "|[^A-Za-z0-9#](?=[\\s.])"
@@ -101,13 +101,14 @@ public class Lexer {
             } else if (m.group().matches("#[0-9A-Fa-f]{6}")) {
                 tokens.add(new Token(TokenType.Hex, m.group(), row));
                 lastCodeRow = row;
-            } else if (Character.isDigit(m.group().charAt(0))) {
+            } else if (m.group().matches("\\d+")) {
                 tokens.add(new Token(TokenType.Decimal, Integer.parseInt(m.group()), row));
             } else if (m.group().matches("\"")) {
                 tokens.add(new Token(TokenType.Quote, null, row));
             } else if (m.group().matches("\\.")) {
                 tokens.add(new Token(TokenType.Period, null, row));
             } else {
+                //System.out.println("Missad token: '" + m.group() + "' på rad " + row);
                 throw new SyntaxError(lastrow);
             }
             lastrow = row;
@@ -134,7 +135,7 @@ public class Lexer {
     public Token peekToken() throws SyntaxError {
         // Slut på indataströmmen
         if (!hasMoreTokens()) {
-            // System.out.println("hej");
+            //System.out.println("hej");
             throw new SyntaxError(lastCodeRow);
         }
 
