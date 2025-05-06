@@ -36,7 +36,8 @@ public class Main {
                 // System.out.println("x: " + leona.getX() + " newX: " + newX);
                 // System.out.println("y: " + leona.getY() + " newY: " + newY);
                 if (leona.isPenDown()) {
-                    System.out.printf("%s %.4f %.4f %.4f %.4f%n", leona.getColor(), leona.getX(), leona.getY(), newX, newY);
+                    System.out.printf("%s %.4f %.4f %.4f %.4f%n", leona.getColor(), leona.getX(), leona.getY(), newX,
+                            newY);
                 }
 
                 leona.setX(newX);
@@ -93,32 +94,32 @@ public class Main {
     }
 
     public static void main(String[] args) throws java.io.IOException, SyntaxError {
-        //System.out.println("ja");
+        // System.out.println("ja");
         Scanner scanner = new Scanner(System.in);
         StringBuilder inputBuilder = new StringBuilder();
         while (scanner.hasNextLine()) {
             inputBuilder.append(scanner.nextLine()).append("\n");
-            //System.out.println("row");
+            // System.out.println("row");
         }
         String result = inputBuilder.toString().replaceAll("\r\n", "\n"); // Standardisera radbrytningar;
         scanner.close();
-        try{  Lexer lexer = new Lexer(result);
-            //System.out.println("ja2");
+        try {
+            Lexer lexer = new Lexer(result);
+            // System.out.println("ja2");
             Parser parser = new Parser(lexer);
-            //System.out.println("ja3");
+            // System.out.println("ja3");
             ParseTree Tree = parser.parse();
-            //System.out.println("ja4");
-            System.out.println(Tree.getChildren().get(0).getToken().getType());
-            System.out.println(Tree.getChildren().get(1).getToken().getType());
-            System.out.println(Tree.getChildren().get(2).getToken().getType());
+            // System.out.println("ja4");
+            // System.out.println(Tree.getChildren().get(0).getToken().getType());
+            // System.out.println(Tree.getChildren().get(1).getToken().getType());
+            // System.out.println(Tree.getChildren().get(2).getToken().getType());
 
             Leona leona = new Leona(0, 0, 0, false, "#0000FF");
             traverseParseTree(Tree, leona);
-        }
-        catch (SyntaxError e) {
+        } catch (SyntaxError e) {
             System.out.println(e.getError());
         }
-      
+
         // System.out.println(result.getChildren().get(0).getChildren().get(0));
         // Parsning klar, gör vad vi nu vill göra med syntaxträdet
         /*

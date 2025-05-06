@@ -50,7 +50,7 @@ public class Parser {
     // instruktionen.
     private ParseTree instruction() throws SyntaxError {
         Token t = lexer.peekToken();
-        // System.out.println(t.getType() + " + " + t.getData() + " im up here");
+        System.out.println(t.getType() + " + " + t.getData() + " im up here");
         if (t.getType() == TokenType.Forw || t.getType() == TokenType.Back) {
             return movement();
         } else if (t.getType() == TokenType.Left || t.getType() == TokenType.Right) {
@@ -62,7 +62,7 @@ public class Parser {
         } else if (t.getType() == TokenType.Rep) {
             return repeat();
         } else {
-            // System.out.println(t.getType() + " im down here");
+            System.out.println("Token: " + t.getType() + " im down here");
             throw new SyntaxError(t.getRow());
         }
     }
@@ -72,12 +72,16 @@ public class Parser {
         Token param = lexer.nextToken(); // ät upp t
 
         Token decimal = lexer.nextToken();
-        if (decimal.getType() != TokenType.Decimal)
+        if (decimal.getType() != TokenType.Decimal) {
+            System.out.println("im triggerd by decimal");
             throw new SyntaxError(decimal.getRow());
+        }
 
         Token period = lexer.nextToken();
-        if (period.getType() != TokenType.Period)
+        if (period.getType() != TokenType.Period) {
+            System.out.println("im triggerd by period");
             throw new SyntaxError(period.getRow());
+        }
 
         ParseTree parseTree = new ParseTree(param);
         parseTree.addChild(new ParseTree(decimal));
@@ -109,9 +113,12 @@ public class Parser {
         Token param = lexer.nextToken();
 
         Token period = lexer.nextToken();
-        if (period.getType() != TokenType.Period)
-            throw new SyntaxError(period.getRow());
+        if (!lexer.hasMoreTokens())
+            throw new SyntaxError(param.getRow());
 
+        if (period.getType() != TokenType.Period) {
+            throw new SyntaxError(period.getRow());
+        }
         ParseTree parseTree = new ParseTree(param);
         parseTree.addChild(new ParseTree(period));
 
@@ -149,6 +156,7 @@ public class Parser {
         // System.out.println(decimal.getType() + " " + decimal.getData());
         if (decimal.getType() != TokenType.Decimal)
             throw new SyntaxError(decimal.getRow());
+        // System.out.println(decimal.getRow());
         if (lexer.peekToken().getType() == TokenType.Quote) {
 
             Token firstQuote = lexer.nextToken();
