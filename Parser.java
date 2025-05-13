@@ -76,7 +76,7 @@ public class Parser {
         Token decimal = lexer.nextToken();
         // System.out.println(decimal.getType() + " " + decimal.getData() + "
         // decimal?");
-        if (decimal.getType() != TokenType.Decimal) {
+        if (decimal.getType() != TokenType.Decimal || (int) decimal.getData() < 1) {
             // System.out.println("decimal error?");
             throw new SyntaxError(decimal.getRow());
         }
@@ -102,7 +102,7 @@ public class Parser {
         // System.out.println(decimal.getType() + " " + decimal.getData() + "
         // decimal?");
 
-        if (decimal.getType() != TokenType.Decimal)
+        if (decimal.getType() != TokenType.Decimal || (int) decimal.getData() < 1)
             throw new SyntaxError(decimal.getRow());
 
         Token period = lexer.nextToken();
@@ -159,7 +159,7 @@ public class Parser {
         Token rep = lexer.nextToken();
         Token decimal = lexer.nextToken();
 
-        if (decimal.getType() != TokenType.Decimal)
+        if (decimal.getType() != TokenType.Decimal || (int) decimal.getData() < 1)
             throw new SyntaxError(decimal.getRow());
 
         ParseTree repNode = new ParseTree(rep);

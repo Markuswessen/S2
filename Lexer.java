@@ -38,10 +38,10 @@ public class Lexer {
     public Lexer(String input) throws java.io.IOException, SyntaxError {
 
         String regex = "%.*"
-                + "|(?i)FORW(?=[\\s+.%])"
-                + "|(?i)BACK(?=[\\s+.%])"
-                + "|(?i)LEFT(?=[\\s+.%])"
-                + "|(?i)RIGHT(?=[\\s+.%])"
+                + "|(?i)^FORW\s\\d+(?=\\.$)"
+                + "|(?i)^BACK\\s\\d+(?=\\.$)"
+                + "|(?i)^LEFT\s\\d+(?=\\.$)"
+                + "|(?i)^RIGHT\s\\d+(?=\\.$)"
                 + "|(?i)DOWN(?=[\\s+.%])"
                 + "|(?i)UP(?=[\\s+.%])"
                 + "|(?i)COLOR(?=[\\s+.%])"
