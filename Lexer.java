@@ -37,30 +37,29 @@ public class Lexer {
 
     public Lexer(String input) throws java.io.IOException, SyntaxError {
 
-        String regex = "%.*" 
-        + "|(?i)FORW(?=[\\s+.%])"
-        + "|(?i)BACK(?=[\\s+.%])"
-        + "|(?i)LEFT(?=[\\s+.%])" 
-        + "|(?i)RIGHT(?=[\\s+.%])"
-        + "|(?i)DOWN(?=[\\s+.%])" 
-        + "|(?i)UP(?=[\\s+.%])" 
-        + "|(?i)COLOR(?=[\\s+.%])"
-        + "|(?i)REP(?=[\\s+.%])"
-        + "|#[0-9A-Fa-f]{6}(?=[\\s.%])"
-        + "|\\d+(?=[\\s.%]|$)"
-        + "|\""
-        + "|\\."
-        + "|[^A-Za-z0-9#](?=[\\s.%])"
-        + "|\\s+"
-        + "|\\S+";
-        
-        
+        String regex = "%.*"
+                + "|(?i)FORW(?=[\\s+.%])"
+                + "|(?i)BACK(?=[\\s+.%])"
+                + "|(?i)LEFT(?=[\\s+.%])"
+                + "|(?i)RIGHT(?=[\\s+.%])"
+                + "|(?i)DOWN(?=[\\s+.%])"
+                + "|(?i)UP(?=[\\s+.%])"
+                + "|(?i)COLOR(?=[\\s+.%])"
+                + "|(?i)REP(?=[\\s+.%])"
+                + "|#[0-9A-Fa-f]{6}(?=[\\s.%])"
+                + "|\\d+(?=[\\s.%]|$)"
+                + "|\""
+                + "|\\."
+                + "|[^A-Za-z0-9#](?=[\\s.%])"
+                + "|\\s+"
+                + "|\\S+";
+
         // System.out.println("Hejsan");
         Pattern tokenPattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         // System.out.println("Hejsan2");
 
         Matcher m = tokenPattern.matcher(input);
-       // System.out.println(m);
+        // System.out.println(m);
         int inputPos = 0;
         tokens = new ArrayList<>();
         currentToken = 0;
@@ -68,7 +67,7 @@ public class Lexer {
         while (m.find()) {
             int lines = m.group().length() - m.group().replace("\n", "").length();
             row += lines;
-            //System.out.println("Match: '" + m.group() + "' " + row);
+            // System.out.println("Match: '" + m.group() + "' " + row);
 
             if (m.group().matches("\\s+") || m.group().matches("%.*")) {
                 continue;
@@ -108,7 +107,7 @@ public class Lexer {
             } else if (m.group().matches("\\.")) {
                 tokens.add(new Token(TokenType.Period, null, row));
             } else {
-                //System.out.println("Missad token: '" + m.group() + "' på rad " + row);
+                // System.out.println("Missad token: '" + m.group() + "' på rad " + row);
                 throw new SyntaxError(lastrow);
             }
             lastrow = row;
@@ -119,7 +118,7 @@ public class Lexer {
             if (input.substring(inputPos).matches("\\s*")) {
                 // System.out.println("Ignorerar tomma radbrytningar på slutet.");
             } else {
-                //System.out.println("Missad input: '" + input.substring(inputPos) + "'");
+                // System.out.println("Missad input: '" + input.substring(inputPos) + "'");
                 tokens.add(new Token(TokenType.Error, null, row));
             }
         }
@@ -135,7 +134,7 @@ public class Lexer {
     public Token peekToken() throws SyntaxError {
         // Slut på indataströmmen
         if (!hasMoreTokens()) {
-           // System.out.println("hej");
+            // System.out.println("hej");
             throw new SyntaxError(lastrow);
         }
 
@@ -147,6 +146,11 @@ public class Lexer {
         Token res = peekToken();
         currentToken++;
         return res;
+    }
+
+    public Token aheadToken() throws SyntaxError {
+        return tokens.get(currentToken + 1);
+
     }
 
     public boolean hasMoreTokens() {
