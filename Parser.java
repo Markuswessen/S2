@@ -157,6 +157,7 @@ public class Parser {
 
     private ParseTree repeat() throws SyntaxError {
         Token rep = lexer.nextToken();
+
         Token decimal = lexer.nextToken();
 
         if (decimal.getType() != TokenType.Decimal || (int) decimal.getData() < 1)
@@ -171,7 +172,8 @@ public class Parser {
 
         if (next.getType() == TokenType.Quote) {
             lexer.nextToken(); // consume the starting "
-
+            if (lexer.peekToken().getType() == TokenType.Quote)
+                throw new SyntaxError(next.getRow());
             int quoteLevel = 1;
 
             while (quoteLevel > 0) {

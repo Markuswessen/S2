@@ -108,9 +108,6 @@ public class Main {
             //System.out.println("ja3");
             ParseTree Tree = parser.parse();
             //System.out.println("ja4");
-            System.out.println(Tree.getChildren().get(0).getToken().getType());
-            System.out.println(Tree.getChildren().get(1).getToken().getType());
-            //System.out.println(Tree.getChildren().get(2).getToken().getType());
 
             Leona leona = new Leona(0, 0, 0, false, "#0000FF");
             traverseParseTree(Tree, leona);
