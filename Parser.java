@@ -120,8 +120,6 @@ public class Parser {
         Token param = lexer.nextToken();
 
         Token period = lexer.nextToken();
-        if (!lexer.hasMoreTokens())
-            throw new SyntaxError(param.getRow());
 
         if (period.getType() != TokenType.Period) {
             throw new SyntaxError(period.getRow());

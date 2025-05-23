@@ -66,9 +66,11 @@ public class Lexer {
         while (m.find()) {
             int lines = m.group().length() - m.group().replace("\n", "").length();
             row += lines;
-            // System.out.println("Match: '" + m.group() + "' " + row);
-
-            if (m.group().matches("\\s+") || m.group().matches("%.*")) {
+            //System.out.println("Match: '" + m.group() + "' " + row);
+           // System.out.println("charat: " + m.group().charAt(0));
+            if (m.group().startsWith("%") || m.group().matches("\\s+")) {
+               // System.out.println("Comment or whitespace: " + m.group());
+                inputPos = m.end();
                 continue;
             }
 
@@ -97,6 +99,7 @@ public class Lexer {
             } else if (m.group().matches("\\.")) {
                 tokens.add(new Token(TokenType.Period, null, row));
             } else {
+                //System.out.println("Error1: " + m.group());
                 tokens.add(new Token(TokenType.Error, null, row));
             }
             lastrow = row;
@@ -106,8 +109,9 @@ public class Lexer {
         if (inputPos != input.length()) {
             String remaining = input.substring(inputPos);
 
-            if (remaining.matches("\\s*")) {
+            if (remaining.matches("\\s*") || remaining.matches("%.*")) {
             } else {
+                //System.out.println("Error2: " + remaining);
                 tokens.add(new Token(TokenType.Error, null, row));
             }
         }
