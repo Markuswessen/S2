@@ -1,2 +1,2 @@
-![Tree1](Screenshot 2025-06-06 131604.jpg)
-![Tree2](Screenshot 2025-06-06 131634.jpg )
+![Tree1](Tree1.png)
+![Tree2](Tree2.png)
